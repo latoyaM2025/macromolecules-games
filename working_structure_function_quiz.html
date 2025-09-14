@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Structure-Function Relationships Quiz</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 900px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .quiz-container {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        .header {
+            text-align: center;
+            color: #2c3e50;
+            margin-bottom: 30px;
+        }
+        .instructions {
+            background: #e8f4fd;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 25px;
+            border-left: 4px solid #3498db;
+        }
+        .question-container {
+            background: #f8f9fa;
+            padding: 25px;
+            border-radius: 10px;
+            margin: 20px 0;
+            border: 2px solid #dee2e6;
+        }
+        .question {
+            font-size: 18px;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 20px;
+        }
+        .options {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 12px;
+        }
+        .option {
+            background: white;
+            padding: 15px;
+            border: 2px solid #dee2e6;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            user-select: none;
+        }
+        .option:hover {
+            border-color: #3498db;
+            transform: translateY(-1px);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .option.selected {
+            background: #3498db;
+            color: white;
+            border-color: #2980b9;
+        }
+        .option.correct {
+            background: #27ae60;
+            color: white;
+            border-color: #229954;
+        }
+        .option.incorrect {
+            background: #e74c3c;
+            color: white;
+            border-color: #c0392b;
+        }
+        .feedback {
+            margin: 15px 0;
+            padding: 15px;
+            border-radius: 8px;
+            font-weight: bold;
+            display: none;
+        }
+        .feedback.success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        .feedback.error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        .navigation {
+            text-align: center;
+            margin: 30px 0;
+        }
+        .nav-btn {
+            margin: 0 10px;
+            padding: 12px 25px;
+            background: #3498db;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+        .nav-btn:hover {
+            background: #2980b9;
+        }
+        .nav-btn:disabled {
+            background: #bdc3c7;
+            cursor: not-allowed;
+        }
+        .progress {
+            text-align: center;
+            margin: 20px 0;
+            font-size: 18px;
+            font-weight: bold;
+            color: #2c3e50;
+        }
+        .score {
+            text-align: center;
+            font-size: 20px;
+            font-weight: bold;
+            color: #2c3e50;
+            margin: 20px 0;
+            padding: 15px;
+            background: #e8f4fd;
+            border-radius: 8px;
+        }
+        .explanation {
+            background: #fff3cd;
+            border: 1px solid #ffeaa7;
+            border-radius: 8px;
+            padding: 15px;
+            margin: 15px 0;
+            display: none;
+        }
+        .explanation h4 {
+            color: #856404;
+            margin-top: 0;
+        }
+        @media (max-width: 768px) {
+            .navigation {
+                display: flex;
+                flex-direction: column;
+                gap: 10px;
+            }
+            .nav-btn {
+                margin: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="quiz-container">
+        <div class="header">
+            <h1>🔬 Structure-Function Relationships</h1>
+            <p>Explore how molecular structure determines biological function</p>
+        </div>
+
+        <div class="instructions">
+            <strong>Instructions:</strong> Read each question carefully and select the best answer. You'll get immediate feedback and explanations for each question.
+        </div>
+
+        <div class="progress">
+            Question <span id="currentQ">1</span> of <span id="totalQ">6</span>
+        </div>
+
+        <div class="score">
+            Score: <span id="score">0</span> / <span id="totalScore">6</span>
+        </div>
+
+        <div class="question-container" id="questionContainer">
+            <!-- Questions will be loaded here -->
+        </div>
+
+        <div class="navigation">
+            <button class="nav-btn" id="prevBtn" onclick="previousQuestion()" disabled>Previous</button>
+            <button class="nav-btn" id="nextBtn" onclick="nextQuestion()">Next Question</button>
+            <button class="nav-btn" id="finishBtn" onclick="finishQuiz()" style="display: none;">Finish Quiz</button>
+        </div>
+    </div>
+
+    <script>
+        const questions = [
+            {
+                question: "Why are carbohydrates excellent for quick energy?",
+                options: [
+                    "They have double helix structures like DNA",
+                    "They contain simple bonds that can be quickly broken to release energy",
+                    "They are stored in large quantities in fat cells",
+                    "They have complex branched structures that are hard to break down"
+                ],
+                correct: 1,
+                explanation: "Carbohydrates have simple chemical bonds (especially glucose) that can be quickly broken down through cellular respiration to release energy rapidly when cells need it."
+            },
+            {
+                question: "What structural feature makes proteins ideal for catalysis (speeding up reactions)?",
+                options: [
+                    "Their double-stranded structure",
+                    "Their linear chain structure",
+                    "Their specific 3D shapes that create active sites",
+                    "Their ability to store large amounts of energy"
+                ],
+                correct: 2,
+                explanation: "Proteins fold into specific 3D shapes that create active sites - special regions where substrates can bind and reactions can occur more easily, making them perfect catalysts (enzymes)."
+            },
+            {
+                question: "Why are lipids better for long-term energy storage than carbohydrates?",
+                options: [
+                    "Lipids can form double helix structures",
+                    "Lipids are easier to break down quickly",
+                    "Lipids have simpler chemical structures",
+                    "Lipids contain more energy per gram and are hydrophobic (water-repelling)"
+                ],
+                correct: 3,
+                explanation: "Lipids store more than twice the energy per gram compared to carbohydrates, and their hydrophobic nature allows them to be stored without water, making them ideal for long-term energy storage."
+            },
+            {
+                question: "What makes DNA perfect for storing genetic information?",
+                options: [
+                    "Its ability to speed up chemical reactions",
+                    "Its double helix structure with complementary base pairing",
+                    "Its branched structure for structural support",
+                    "Its ability to provide quick energy"
+                ],
+                correct: 1,
+                explanation: "DNA's double helix with complementary base pairing (A-T, G-C) allows for accurate replication and stable storage of genetic information. The sequence of bases codes for all genetic instructions."
+            },
+            {
+                question: "How does the structure of cellulose make it ideal for plant cell walls?",
+                options: [
+                    "It can speed up chemical reactions",
+                    "It forms strong, rigid fibers that provide structural support",
+                    "It can store genetic information",
+                    "It can be quickly broken down for energy"
+                ],
+                correct: 1,
+                explanation: "Cellulose forms long, straight chains that bundle together into strong fibers. This rigid structure provides excellent structural support for plant cell walls, helping plants maintain their shape."
+            },
+            {
+                question: "Why do cell membranes use phospholipids instead of other molecules?",
+                options: [
+                    "Phospholipids speed up membrane reactions",
+                    "Phospholipids can store genetic information",
+                    "Phospholipids have both hydrophilic and hydrophobic parts, forming selective barriers",
+                    "Phospholipids provide energy for the cell"
+                ],
+                correct: 2,
+                explanation: "Phospholipids are amphipathic - they have hydrophilic (water-loving) heads and hydrophobic (water-fearing) tails. This allows them to form bilayers that create selective barriers, controlling what enters and exits cells."
+            }
+        ];
+
+        let currentQuestion = 0;
+        let score = 0;
+        let selectedAnswer = null;
+        let answered = false;
+
+        function loadQuestion() {
+            const q = questions[currentQuestion];
+            const container = document.getElementById('questionContainer');
+            
+            container.innerHTML = `
+                <div class="question">${q.question}</div>
+                <div class="options" id="options">
+                    ${q.options.map((option, index) => 
+                        `<div class="option" data-index="${index}" onclick="selectAnswer(${index})">${option}</div>`
+                    ).join('')}
+                </div>
+                <div class="feedback" id="feedback"></div>
+                <div class="explanation" id="explanation">
+                    <h4>Explanation:</h4>
+                    <p>${q.explanation}</p>
+                </div>
+            `;
+            
+            // Update progress
+            document.getElementById('currentQ').textContent = currentQuestion + 1;
+            document.getElementById('totalQ').textContent = questions.length;
+            
+            // Reset state
+            selectedAnswer = null;
+            answered = false;
+            
+            // Update navigation
+            updateNavigation();
+        }
+
+        function selectAnswer(index) {
+            if (answered) return;
+            
+            selectedAnswer = index;
+            const options = document.querySelectorAll('.option');
+            const feedback = document.getElementById('feedback');
+            const explanation = document.getElementById('explanation');
+            
+            // Clear previous selections
+            options.forEach(opt => opt.classList.remove('selected'));
+            
+            // Mark selected
+            options[index].classList.add('selected');
+            
+            // Check answer after a short delay
+            setTimeout(() => {
+                const correct = questions[currentQuestion].correct;
+                answered = true;
+                
+                if (index === correct) {
+                    options[index].classList.remove('selected');
+                    options[index].classList.add('correct');
+                    feedback.textContent = '✅ Correct! Great understanding of structure-function relationships!';
+                    feedback.className = 'feedback success';
+                    score++;
+                } else {
+                    options[index].classList.remove('selected');
+                    options[index].classList.add('incorrect');
+                    options[correct].classList.add('correct');
+                    feedback.textContent = '❌ Not quite right. The correct answer is highlighted in green.';
+                    feedback.className = 'feedback error';
+                }
+                
+                feedback.style.display = 'block';
+                explanation.style.display = 'block';
+                
+                // Update score display
+                document.getElementById('score').textContent = score;
+                
+                // Update navigation
+                updateNavigation();
+            }, 500);
+        }
+
+        function updateNavigation() {
+            const prevBtn = document.getElementById('prevBtn');
+            const nextBtn = document.getElementById('nextBtn');
+            const finishBtn = document.getElementById('finishBtn');
+            
+            prevBtn.disabled = currentQuestion === 0;
+            
+            if (currentQuestion === questions.length - 1) {
+                nextBtn.style.display = 'none';
+                finishBtn.style.display = 'inline-block';
+            } else {
+                nextBtn.style.display = 'inline-block';
+                finishBtn.style.display = 'none';
+            }
+        }
+
+        function nextQuestion() {
+            if (currentQuestion < questions.length - 1) {
+                currentQuestion++;
+                loadQuestion();
+            }
+        }
+
+        function previousQuestion() {
+            if (currentQuestion > 0) {
+                currentQuestion--;
+                loadQuestion();
+            }
+        }
+
+        function finishQuiz() {
+            const percentage = Math.round((score / questions.length) * 100);
+            let message = `Quiz Complete!\n\nFinal Score: ${score}/${questions.length} (${percentage}%)\n\n`;
+            
+            if (percentage >= 90) {
+                message += "🎉 Outstanding! You have an excellent understanding of how molecular structure determines biological function!";
+            } else if (percentage >= 80) {
+                message += "👍 Great work! You understand most structure-function relationships very well.";
+            } else if (percentage >= 70) {
+                message += "📚 Good effort! Review the explanations and try to connect structure to function more clearly.";
+            } else {
+                message += "🔄 Keep studying! Focus on how the shape and properties of molecules determine what they can do in living systems.";
+            }
+            
+            alert(message);
+        }
+
+        // Initialize
+        document.getElementById('totalScore').textContent = questions.length;
+        loadQuestion();
+    </script>
+</body>
+</html>
+
