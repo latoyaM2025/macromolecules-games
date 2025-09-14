@@ -160,7 +160,7 @@
         </div>
 
         <div class="instructions">
-            <strong>Instructions:</strong> Click on a food item, then click on the correct macromolecule category. Foods can be moved between categories. Click "Check Answers" when done!
+            <strong>Instructions:</strong> Click on a food item, then click on the correct macromolecule category. Foods can be moved between categories. Aim for 80% or higher accuracy! Click "Check Answers" when done.
         </div>
 
         <div class="score">
@@ -339,6 +339,7 @@
             let total = 0;
             let results = [];
             
+            // Check all placed items
             Object.keys(placedItems).forEach(category => {
                 placedItems[category].forEach(foodText => {
                     total++;
@@ -351,13 +352,26 @@
                 });
             });
             
+            // Check if all 16 items have been placed
+            const totalItems = Object.keys(correctAnswers).length;
+            if (total < totalItems) {
+                const unplacedCount = totalItems - total;
+                results.push(`⚠️ ${unplacedCount} items not yet classified`);
+            }
+            
             document.getElementById('correct').textContent = correct;
             
             const percentage = total > 0 ? Math.round((correct / total) * 100) : 0;
             let message = `Score: ${correct}/${total} (${percentage}%)\n\n`;
             
-            if (percentage >= 90) {
+            if (total === totalItems && percentage === 100) {
+                message += "🎉 Perfect! You correctly classified all macromolecules!";
+                showFeedback(message, 'success');
+            } else if (percentage >= 90) {
                 message += "🎉 Excellent work! You understand macromolecules very well!";
+                showFeedback(message, 'success');
+            } else if (percentage >= 80) {
+                message += "👍 Great job! You've reached the target accuracy!";
                 showFeedback(message, 'success');
             } else if (percentage >= 70) {
                 message += "👍 Good job! Review the incorrect items and try again.";
