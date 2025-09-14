@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Macromolecules Interactive Games</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 40px 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+        .container {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 30px;
+        }
+        .game-link {
+            display: block;
+            background: linear-gradient(135deg, #3498db, #2980b9);
+            color: white;
+            text-decoration: none;
+            padding: 20px;
+            margin: 15px 0;
+            border-radius: 10px;
+            text-align: center;
+            font-size: 1.2em;
+            font-weight: bold;
+            transition: transform 0.3s ease;
+        }
+        .game-link:hover {
+            transform: translateY(-3px);
+        }
+        .game-2 {
+            background: linear-gradient(135deg, #74b9ff, #0984e3);
+        }
+        .game-3 {
+            background: linear-gradient(135deg, #ff9a9e, #fecfef);
+        }
+        .description {
+            color: #666;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🧬 Macromolecules Interactive Games</h1>
+        <p class="description">Choose a game to test your knowledge of macromolecules!</p>
+        
+        <a href="matching_game.html" class="game-link">
+            🎯 Game 1: Basic Matching<br>
+            <small>Match macromolecules with their functions</small>
+        </a>
+        
+        <a href="drag_drop_classification.html" class="game-link game-2">
+            🍎 Game 2: Food Classification<br>
+            <small>Drag foods into correct categories</small>
+        </a>
+        
+        <a href="structure_function_game.html" class="game-link game-3">
+            🔬 Game 3: Structure & Function<br>
+            <small>Advanced molecular relationships</small>
+        </a>
+        
+        <p style="text-align: center; margin-top: 30px; color: #666; font-size: 0.9em;">
+            For best results, use Chrome or Firefox browser
+        </p>
+    </div>
+</body>
+</html>
