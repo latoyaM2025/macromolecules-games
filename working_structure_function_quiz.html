@@ -255,38 +255,56 @@
                 correct: 2,
                 explanation: "Phospholipids are amphipathic - they have hydrophilic (water-loving) heads and hydrophobic (water-fearing) tails. This allows them to form bilayers that create selective barriers, controlling what enters and exits cells."
             }
-        ];
-
+         ];
         let currentQuestion = 0;
         let score = 0;
         let selectedAnswer = null;
         let answered = false;
+        let questionAnswers = new Array(questions.length).fill(null); // Track answers for each question
+        let questionScored = new Array(questions.length).fill(false); // Track if question was scored
 
-        function loadQuestion() {
+            function loadQuestion() {
             const q = questions[currentQuestion];
-            const container = document.getElementById('questionContainer');
             
-            container.innerHTML = `
+            document.getElementById('currentQ').textContent = currentQuestion + 1;
+            document.getElementById('questionContainer').innerHTML = `
                 <div class="question">${q.question}</div>
-                <div class="options" id="options">
+                <div class="options">
                     ${q.options.map((option, index) => 
                         `<div class="option" data-index="${index}" onclick="selectAnswer(${index})">${option}</div>`
                     ).join('')}
                 </div>
                 <div class="feedback" id="feedback"></div>
-                <div class="explanation" id="explanation">
-                    <h4>Explanation:</h4>
-                    <p>${q.explanation}</p>
-                </div>
+                <div class="explanation" id="explanation">${q.explanation}</div>
             `;
             
-            // Update progress
-            document.getElementById('currentQ').textContent = currentQuestion + 1;
-            document.getElementById('totalQ').textContent = questions.length;
+            // Reset state for current question
+            selectedAnswer = questionAnswers[currentQuestion];
+            answered = questionScored[currentQuestion];
             
-            // Reset state
-            selectedAnswer = null;
-            answered = false;
+            // If question was already answered, show the result
+            if (answered) {
+                const options = document.querySelectorAll('.option');
+                const feedback = document.getElementById('feedback');
+                const explanation = document.getElementById('explanation');
+                const correct = q.correct;
+                
+                if (selectedAnswer === correct) {
+                    options[selectedAnswer].classList.add('correct');
+                    feedback.textContent = '✅ Correct! Great understanding of structure-function relationships!';
+                    feedback.className = 'feedback success';
+                } else {
+                    options[selectedAnswer].classList.add('incorrect');
+                    options[correct].classList.add('correct');
+                    feedback.textContent = '❌ Not quite right. The correct answer is highlighted in green.';
+                    feedback.className = 'feedback error';
+                }
+                
+                feedback.style.display = 'block';
+                explanation.style.display = 'block';
+            } else {
+                document.getElementById('explanation').style.display = 'none';
+            }
             
             // Update navigation
             updateNavigation();
@@ -310,6 +328,10 @@
             setTimeout(() => {
                 const correct = questions[currentQuestion].correct;
                 answered = true;
+                
+                // Store the answer and mark as scored
+                questionAnswers[currentQuestion] = index;
+                questionScored[currentQuestion] = true;
                 
                 if (index === correct) {
                     options[index].classList.remove('selected');
@@ -385,6 +407,7 @@
 
         // Initialize
         document.getElementById('totalScore').textContent = questions.length;
+        document.getElementById('score').textContent = 0;
         loadQuestion();
     </script>
 </body>
